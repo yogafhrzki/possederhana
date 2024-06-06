@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS Sederhana | Yoga Fahrizki</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -269,6 +270,17 @@
         .modal-content .close:hover {
             background-color: #c82333;
         }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            margin: 0 10px;
+        }
     </style>
 </head>
 <body>
@@ -328,7 +340,10 @@
             <p>Total Pembayaran: Rp <span id="payment-total"></span></p>
             <p>Nominal dari Pelanggan: Rp <span id="customer-amount-display"></span></p>
             <p>Kembalian: Rp <span id="change-amount"></span></p>
-            <button onclick="printReceipt()">Cetak Struk</button>
+            <div class="button-container">
+                <button onclick="printReceipt()"><i class="fas fa-print"></i>Cetak Struk</button>
+                <button onclick="saveAsPDF()"><i class="fas fa-file-pdf"></i>Simpan sebagai PDF</button>
+            </div>
             <button class="close" onclick="closePaymentDetailsModal()">Tutup</button>
         </div>
     </div>
@@ -441,7 +456,19 @@
         }
 
         function printReceipt() {
-            alert("Struk telah dicetak.");
+            window.print();
+            closePaymentDetailsModal();
+        }
+
+        function saveAsPDF() {
+            const element = document.querySelector('#payment-details-modal .modal-content');
+            html2pdf(element, {
+                margin: 10,
+                filename: 'struk.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            });
             closePaymentDetailsModal();
         }
 
